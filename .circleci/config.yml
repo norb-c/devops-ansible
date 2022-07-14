@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook main-remote.yml -i inventory.txt --private-key udacity-ansible.pem
+            ansible-playbook main-remote.yml -i inventory.txt
 workflows:
   myWorkflow:
     jobs:
