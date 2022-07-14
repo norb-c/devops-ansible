@@ -1,0 +1,2 @@
+[all]
+ec2-54-152-84-28.compute-1.amazonaws.com
