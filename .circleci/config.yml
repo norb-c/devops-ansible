@@ -1,9 +1,6 @@
 version: 2.1
-# Use a package of configuration called an orb.
 orbs:
-  # Choose either one of the orbs below
   aws-cli: circleci/aws-cli@2.0.3
-  # Define the jobs we want to run for this project
 jobs:
   create_infrastructure:
     docker:
@@ -17,9 +14,23 @@ jobs:
               --template-file template.yml \
               --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5} \
               --region us-east-1
-# Sequential workflow
+  configure_infrastructure:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["65:18:12:2c:f6:ee:7d:3f:b5:82:7e:7c:1d:99:2a:be"]
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook main-remote.yml -i inventory.txt --private-key udacity-ansible.pem
 workflows:
-  # Name the workflow
   myWorkflow:
     jobs:
-      - create_infrastructure
+      # - create_infrastructure
+      - configure_infrastructure
