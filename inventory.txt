@@ -1,5 +1,5 @@
 [ubuntu]
-ec2-3-86-160-105.compute-1.amazonaws.com
+ec2-54-164-117-33.compute-1.amazonaws.com
 
 [all]
-ec2-3-86-160-105.compute-1.amazonaws.com
+ec2-54-164-117-33.compute-1.amazonaws.com
