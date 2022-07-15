@@ -16,7 +16,7 @@ jobs:
               --region us-east-1
   configure_infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.10.5-alpine3.16
     steps:
       - checkout
       - add_ssh_keys:
@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Run Playbook and Configure server
           command: |
-            ansible-playbook main-remote.yml -i inventory.txt
+            ansible-playbook -i inventory.txt main-remote.yml
 workflows:
   myWorkflow:
     jobs:
