@@ -74,45 +74,45 @@ jobs:
             export OldBucketID=$(cat ~/textfile.txt)
             aws s3 rm "s3://${OldBucketID}" --recursive
 
-    create_infrastructure:
-      docker:
-        - image: amazon/aws-cli
-      steps:
-        - checkout
-        - run:
-            name: Create Cloudformation Stack
-            command: |
-              aws cloudformation deploy \
-                --template-file template.yml \
-                --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
-                --region us-east-1
-        - destroy_environment
+  create_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Create Cloudformation Stack
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:7} \
+              --region us-east-1
+      - destroy_environment
 
-    configure_infrastructure:
-      docker:
-        - image: python:3.10.5-alpine3.16
-      steps:
-        - checkout
-        - add_ssh_keys:
-            fingerprints: ["5e:e0:9a:a4:68:29:9c:c3:0c:2d:9b:cf:4d:38:6d:c6"]
-        - run:
-            name: Install Ansible
-            command: |
-              apk add --update ansible
-        - run:
-            name: Run Playbook and Configure server
-            command: |
-              ansible-playbook -i inventory.txt main-remote.yml
+  configure_infrastructure:
+    docker:
+      - image: python:3.10.5-alpine3.16
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["5e:e0:9a:a4:68:29:9c:c3:0c:2d:9b:cf:4d:38:6d:c6"]
+      - run:
+          name: Install Ansible
+          command: |
+            apk add --update ansible
+      - run:
+          name: Run Playbook and Configure server
+          command: |
+            ansible-playbook -i inventory.txt main-remote.yml
 
-    smoke_test:
-      docker:
-        - image: amazon/aws-cli
-      steps:
-        - run:
-            name: Test job
-            # Fail the job intentionally to simulate an error.
-            command: return 1
-        - destroy_environment
+  smoke_test:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - run:
+          name: Test job
+          # Fail the job intentionally to simulate an error.
+          command: return 1
+      - destroy_environment
 
 workflows:
   my_workflow:
